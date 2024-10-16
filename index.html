@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeu climatique</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="container">
+    <img class="background-image" src="imgs/map.jpeg" alt="Background Image">
+
+    <div class="progress-bars">
+      <div class="stat-with-progress">
+        <div class="text">
+          <div class="label">Effort</div>
+          <div class="value">
+            <span style="font-weight: 600;" id="effortNum">100</span>
+          </div>
+        </div>
+        <div class="progress-bar" style="height: 8px;" id="effortBar">
+          <div class="filler" id="effortFiller"
+            style="width: 100%; background-color: black; transition: width 300ms ease-in-out, background-color 300ms; border-top-right-radius: inherit; border-bottom-right-radius: inherit;">
+          </div>
+        </div>
+      </div>
+      <div class="stat-with-progress">
+        <div class="text">
+          <div class="label">CO2</div>
+          <div class="value">
+            <span style="font-weight: 600;" id="carbonNum">34.2</span>
+          </div>
+        </div>
+        <div class="progress-bar" style="height: 8px;" id="carbonBar">
+          <div class="filler" id="carbonFiller"
+            style="width: 100%; background-color: rgb(204, 0, 0); transition: width 300ms ease-in-out, background-color 300ms; border-top-right-radius: inherit; border-bottom-right-radius: inherit;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="image-container" style="left: 15%;" id="darkCloud1">
+      <img src="imgs/darkcloud.png">
+    </div>
+
+    <div class="image-container" style="left: 40%;" id="darkCloud2">
+      <img src="imgs/darkcloud.png">
+    </div>
+
+    <div class="image-container" style="left: 65%;" id="darkCloud3">
+      <img src="imgs/darkcloud.png">
+    </div>
+
+    <div class="image-container" style="display: none; top: 1%; left: 68%; animation: zoomAnimation 2s ease-in-out;"
+      id="whiteCloud1">
+      <img src="imgs/whiteCloud1.png">
+    </div>
+
+    <div class="image-container" style="display: none; top: 1%; left: 40%; animation: zoomAnimation 2s ease-in-out;"
+      id="whiteCloud2">
+      <img src="imgs/whiteCloud2.png">
+    </div>
+
+    <div class="image-container" style="display: none; top: 0%; left: 15%; animation: zoomAnimation 2s ease-in-out;"
+      id="sun">
+      <img src="imgs/sun.png">
+    </div>
+
+
+    <div class="overlay" id="overlay" style="display: block;"></div>
+    <div class="modal" id="intro" style="display: block;">
+      <h2 style="text-align: center;">Bienvenue!</h2>
+      <p>Comme nous le savons tous, l’environnement dans lequel nous vivons se détériore en raison des émissions
+        excessives de dioxyde de carbone. Nous devons prendre des mesures pour empêcher une nouvelle dégradation.</p>
+      <p>Dans ce jeu, vous disposerez de 100 points d’effort à utiliser. Chaque option coûte un certain nombre de points
+        d’effort et entraîne une réduction correspondante des émissions
+        de CO2.
+        Votre objectif est de choisir les mesures les plus efficaces pour réduire au maximum les émissions de CO2.</p>
+      <label for="nameInput">S’il vous plaît entrez votre identifiant:</label>
+      <input type="text" id="nameInput">
+      <button class="button submit-button" id="startBtn" onclick="start()">Aller!</button>
+    </div>
+
+
+    <div class="button-before" id="coal" style="top: 19%; left: 10%;  width: 150px; height: 150px;">
+      <img class="button-image-before" src="imgs/coal.png" onclick="clickCoal()" alt="Coal Image">
+    </div>
+
+    <div class="button-after" id="coalA" style="top: 19%; left: 10%;  width: 150px; height: 150px;">
+      <img class="button-image-after" src="imgs/coal.png" alt="Coal Image">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="coalB" style="top: 19%; left: 10%;  width: 150px; height: 150px;">
+      <img class="button-image-after" src="imgs/coalB.png" alt="Coal Image">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="coalC" style="top: 20%; left: 10%;  width: 140px; height: 140px;">
+      <img class="button-image-after" src="imgs/coalC.png" alt="Coal Image">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+
+    <div class="button-before" id="car" style="top: 51%; left: 18%; width: 250px; height: 45px;">
+      <img class="button-image-before" src="imgs/car.png" onclick="clickCar()" alt="Car Image">
+    </div>
+
+    <div class="button-after" id="carA" style="top: 51%; left: 18%; width: 250px; height: 45px;">
+      <img class="button-image-after" src="imgs/carA.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="carB" style="top: 46%; left: 18%; width: 130px; height: 107px;">
+      <img class="button-image-after" src="imgs/carB.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="carC" style="top: 46%; left: 18%; width: 250px; height: 112px;">
+      <img class="button-image-after" src="imgs/carC.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-before" id="build" style="top: 45%; left: 41%; width: 180px; height: 125px;">
+      <img class="button-image-before" src="imgs/build.png" onclick="clickBuild()" alt="Build Image">
+    </div>
+
+    <div class="button-after" id="buildA" style="top: 44%; left: 41%; width: 200px; height: 141px;">
+      <img class="button-image-after" src="imgs/buildA.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="buildB" style="top: 44%; left: 41%; width: 220px; height: 110px;">
+      <img class="button-image-after" src="imgs/buildB.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="buildC" style="top: 39.5%; left: 41%; width: 200px; height: 176px;">
+      <img class="button-image-after" src="imgs/buildC.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+
+    <div class="button-before" id="recy" style="top: 19%; left: 32%;  width: 140px; height: 140px;">
+      <img class="button-image-before" src="imgs/recy.png" onclick="clickRecy()" alt="Industry Image">
+    </div>
+
+    <div class="button-after" id="recyA" style="top: 25%; left: 32%; width: 110px; height: 90px;">
+      <img class="button-image-after" src="imgs/recyA.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="recyB" style="top: 21%; left: 32%; width: 120px; height: 110px;">
+      <img class="button-image-after" src="imgs/recyB.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="recyC" style="top: 20%; left: 32%; width: 150px; height: 150px;">
+      <img class="button-image-after" src="imgs/recyC.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+
+    <div class="button-before" id="elec" style="top: 48%; left: 82%;  width: 200px; height: 100px;">
+      <img class="button-image-before" src="imgs/elec.png" onclick="clickElec()" alt="Electricity Image">
+    </div>
+
+    <div class="button-after" id="elecA" style="top: 42%; left: 82%; width: 165px; height: 135px;">
+      <img class="button-image-after" src="imgs/elecA.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="elecB" style="top: 44%; left: 82%; width: 220px; height: 104px;">
+      <img class="button-image-after" src="imgs/elecB.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="elecC" style="top: 44%; left: 82%; width: 220px; height: 110px;">
+      <img class="button-image-after" src="imgs/elecC.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+
+    <div class="button-before" id="plane" style="top: 8%; left: 59%;  width: 180px; height: 65px;">
+      <img class="button-image-before" src="imgs/plane.png" onclick="clickPlane()" alt="Plane Image">
+    </div>
+
+    <div class="button-after" id="planeA" style="top: 5%; left: 59%; width: 180px; height: 44px;">
+      <img class="button-image-after" src="imgs/planeA.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="planeB" style="top: 18%; left: 59%; width: 250px; height: 134px;">
+      <img class="button-image-after" src="imgs/planeB.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="planeC" style="top: 7%; left: 57%; width: 180px; height: 75px;">
+      <img class="button-image-after" src="imgs/planeC.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+
+    <div class="button-before" id="ocean" style="top: 94%; left: 4%;  width: 200px; height: 160px;">
+      <img class="button-image-before" src="imgs/ocean.png" onclick="clickOcean()" alt="Ocean Image">
+    </div>
+
+    <div class="button-after" id="oceanA" style="top: 94%; left: 8.3%; width: 200px; height: 100px;">
+      <img class="button-image-after" src="imgs/oceanA.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="oceanB" style="top: 101.2%; left: 8.3%; width: 200px; height: 139px;">
+      <img class="button-image-after" src="imgs/oceanB.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="oceanC" style="top: 93.3%; left: 8.3%; width: 200px; height: 90px;">
+      <img class="button-image-after" src="imgs/oceanC.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+
+    <div class="button-before" id="ppl" style="top: 100%; left: 95%;  width: 200px; height: 200px;">
+      <img class="button-image-before" src="imgs/ppl.png" onclick="clickPpl()" alt="People Image">
+    </div>
+
+    <div class="button-after" id="pplA" style="top: 95%; left: 95%; width: 200px; height: 154px;">
+      <img class="button-image-after" src="imgs/pplA.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="pplB" style="top: 95%; left: 95%; width: 200px; height: 165px;">
+      <img class="button-image-after" src="imgs/pplB.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="pplC" style="top: 95%; left: 95%; width: 200px; height: 150px;">
+      <img class="button-image-after" src="imgs/pplC.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+
+    <div class="button-before" id="urban" style="top: 69%; left: 23%;  width: 280px; height: 110px;">
+      <img class="button-image-before" src="imgs/urban.png" onclick="clickUrban()" alt="Urban Image">
+    </div>
+
+    <div class="button-after" id="urbanA" style="top: 67%; left: 23%; width: 200px; height: 143px;">
+      <img class="button-image-after" src="imgs/urbanA.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="urbanB" style="top: 68%; left:23%; width: 210px; height: 135px;">
+      <img class="button-image-after" src="imgs/urbanB.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="urbanC" style="top: 68%; left: 23%; width: 200px; height: 128px;">
+      <img class="button-image-after" src="imgs/urbanC.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+
+    <div class="button-before" id="indu" style="top: 42%; left: 61%;  width: 150px; height: 133px;">
+      <img class="button-image-before" src="imgs/indu.png" onclick="clickIndu()" alt="Industry Image">
+    </div>
+
+    <div class="button-after" id="induA" style="top: 45.5%; left: 61%; width: 180px; height: 152px;">
+      <img class="button-image-after" src="imgs/induA.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="induB" style="top: 42.5%; left:61%; width: 160px; height: 130px;">
+      <img class="button-image-after" src="imgs/induB.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="induC" style="top: 42.5%; left: 61%; width: 200px; height: 132px;">
+      <img class="button-image-after" src="imgs/induC.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-before" id="defo" style="top: 68.5%; left: 56%;  width: 180px; height: 120px;">
+      <img class="button-image-before" src="imgs/defo.png" onclick="clickDefo()" alt="Deforestation Image">
+    </div>
+
+    <div class="button-after" id="defoA" style="top: 68%; left: 56%; width: 150px; height: 150px;">
+      <img class="button-image-after" src="imgs/defoA.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="defoB" style="top: 70%; left:56%; width: 150px; height: 100px;">
+      <img class="button-image-after" src="imgs/defoB.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="defoC" style="top: 70%; left: 56%; width: 300px; height: 100px;">
+      <img class="button-image-after" src="imgs/defoC.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-before" id="agri" style="top: 71%; left: 92%;  width: 130px; height: 119px;">
+      <img class="button-image-before" src="imgs/agri.png" onclick="clickAgri()" alt="Agriculture Image">
+    </div>
+
+    <div class="button-after" id="agriA" style="top: 69%; left: 91%; width: 200px; height: 117px;">
+      <img class="button-image-after" src="imgs/agriA.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="agriB" style="top: 67%; left:92%; width: 130px; height: 141px;">
+      <img class="button-image-after" src="imgs/agriB.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <div class="button-after" id="agriC" style="top: 68%; left: 92%; width: 100px; height: 140px;">
+      <img class="button-image-after" src="imgs/agriC.png">
+      <div class="tooltip">Complété!</div>
+    </div>
+
+    <!-- <div id="character">
+      <img src="imgs/character.png" alt="Character">
+      <div id="speechBubble" style="display:display;"></div>
+    </div> -->
+
+
+
+    <!-- <button class="button submit-button" id="play1" onclick="playAudio1()">播放文件1</button> -->
+
+    <!-- Quiz Coal -->
+    <div class="quiz-popup" id="coalQuiz">
+      <p>Trois quarts des émissions de CO2 liées à l’électricité proviennent du charbon. Allez-vous?</p>
+      <div class="options">
+        <label class="option"><input type="radio" name="coalAnswer" value="coalA"> Laisser le marché suivre son cours et
+          la demande de charbon diminuera. (Effort 0 points)</label>
+        <label class="option"><input type="radio" name="coalAnswer" value="coalB"> Éliminer progressivement les
+          centrales à charbon dans les pays riches sur une période de 10 à 20 ans. (Effort 5 points) </label>
+        <label class="option"><input type="radio" name="coalAnswer" value="coalC"> Arrêter toutes les nouvelles
+          centrales à charbon dans le monde et fermer celles dans les pays riches. (Effort 8 points) </label>
+      </div>
+      <button class="button submit-button" onclick="checkCoalAnswer()">Soumettre</button>
+    </div>
+
+
+    <!-- Quiz Car -->
+    <div class="quiz-popup" id="carQuiz">
+      <p>La croissance démographique et économique signifie que le transport routier est en augmentation. Comment
+        allez-vous y faire face? </p>
+      <div class="options">
+        <label class="option"><input type="radio" name="carAnswer" value="carA"> Promouvoir les véhicules électriques
+          pour représenter près de la moitié des voitures sur la route. (Effort 5 points)</label>
+        <label class="option"><input type="radio" name="carAnswer" value="carB"> Construire des tunnels sous les villes
+          pour les véhicules afin de réduire les embouteillages. (Effort 10 points) </label>
+        <label class="option"><input type="radio" name="carAnswer" value="carC"> Électrifier tous les nouveaux bus,
+          fourgonnettes et camions et promouvoir que presque tous les véhicules sur la route soient électriques. (Effort
+          10 points) </label>
+      </div>
+      <button class="button submit-button" onclick="checkCarAnswer()">Soumettre</button>
+    </div>
+
+    <!-- Quiz Building -->
+    <div class="quiz-popup" id="buildQuiz">
+      <p> Les bâtiments et la construction représentent près d’un tiers de la consommation d’énergie. Les villes se
+        développent rapidement dans les pays en développement. Que ferez-vous? </p>
+      <div class="options">
+        <label class="option"><input type="radio" name="buildAnswer" value="buildA"> S’occuper à la fois des anciens et
+          des nouveaux bâtiments : rénover 20 % des anciens et déclarer que tous les nouveaux bâtiments doivent être à
+          zéro émission de carbone. (Effort 3 points)</label>
+        <label class="option"><input type="radio" name="buildAnswer" value="buildB"> Exiger que les villes réhabilitent
+          toutes les maisons mal isolées et les remplacent par des équivalents hautement efficaces. (Effort 5 points)
+        </label>
+        <label class="option"><input type="radio" name="buildAnswer" value="buildC"> Rénover entièrement 85% des
+          bâtiments existants et encourager les lave-linge à l’eau froide et le séchage en ligne. (Effort 8 points)
+        </label>
+      </div>
+      <button class="button submit-button" onclick="checkBuildAnswer()">Soumettre</button>
+    </div>
+
+    <!-- Quiz Recycle -->
+    <div class="quiz-popup" id="recyQuiz">
+      <p>Travailler dans l’industrie du ciment, de l’acier ou du verre implique une émission importante de pollution.
+        L’industrie seule représente environ un quart des émissions de CO2 liées à l’énergie. Que souhaitez-vous faire
+        en premier?</p>
+      <div class="options">
+        <label class="option"><input type="radio" name="recyAnswer" value="recyA"> Interdire tous les gobelets de café
+          jetables et lancer une campagne pour recycler les vieux vélos. (Effort 1 points)</label>
+        <label class="option"><input type="radio" name="recyAnswer" value="recyB"> Accorder des avantages financiers aux
+          personnes qui recyclent leurs petits appareils électroniques. (Effort 2 points) </label>
+        <label class="option"><input type="radio" name="recyAnswer" value="recyC"> Exiger que 40 % de l’acier et 15 % du
+          plastique proviennent de matériaux recyclés. (Effort 5 points) </label>
+      </div>
+      <button class="button submit-button" onclick="checkRecyAnswer()">Soumettre</button>
+    </div>
+
+
+    <!-- Quiz Electricity -->
+    <div class="quiz-popup" id="elecQuiz">
+      <p>Vous avez décidé de la manière dont vous voulez gérer le charbon. Que ferez-vous ensuite pour l’électricité?
+      </p>
+      <div class="options">
+        <label class="option"><input type="radio" name="elecAnswer" value="elecA"> Étendre progressivement l’électricité
+          renouvelable et investir dans le stockage d’énergie. (Effort 5 points)</label>
+        <label class="option"><input type="radio" name="elecAnswer" value="elecB"> Investir 1 % du PIB mondial par an
+          dans l’électricité renouvelable. (Effort 10 points) </label>
+        <label class="option"><input type="radio" name="elecAnswer" value="elecC"> Injecter 2 % du PIB mondial par an
+          dans toutes les sources d’énergie propre. (Effort 15 points) </label>
+      </div>
+      <button class="button submit-button" onclick="checkElecAnswer()">Soumettre</button>
+    </div>
+
+    <!-- Quiz Plane -->
+    <div class="quiz-popup" id="planeQuiz">
+      <p> Le transport ne concerne pas seulement les voitures. Que ferez-vous pour réduire les émissions d’ avions? </p>
+      <div class="options">
+        <label class="option"><input type="radio" name="planeAnswer" value="planeA"> Introduire progressivement du
+          carburant à faible teneur en carbone pour l’aviation. (Effort 5 points)</label>
+        <label class="option"><input type="radio" name="planeAnswer" value="planeB"> Exiger 20 % de carburant à faible
+          teneur en carbone pour l’aviation. Plafonner le nombre de vols long-courriers. Instaurer une taxe pour les
+          voyageurs fréquents. (Effort 7 points) </label>
+        <label class="option"><input type="radio" name="planeAnswer" value="planeC"> Développer un avion hypersonique
+          alimenté au carburant capable de voyager de Londres à Sydney en quatre heures pour réduire les temps de vol
+          commerciaux. (Effort 10 points) </label>
+      </div>
+      <button class="button submit-button" onclick="checkPlaneAnswer()">Soumettre</button>
+    </div>
+
+    <!-- Quiz Ocean -->
+    <div class="quiz-popup" id="oceanQuiz">
+      <p> Les océans absorbent tout autant de CO2 que les forêts, mais ils sont maintenant plus acides. Que ferez-vous?
+      </p>
+      <div class="options">
+        <label class="option"><input type="radio" name="oceanAnswer" value="oceanA"> Augmenter la recherche sur
+          l’acidification des océans et investir dans des moyens de restauration des récifs coralliens. (Effort 2
+          points)</label>
+        <label class="option"><input type="radio" name="oceanAnswer" value="oceanB"> Restreindre la pêche en haute mer
+          pour protéger les écosystèmes marins. (Effort 4 points) </label>
+        <label class="option"><input type="radio" name="oceanAnswer" value="oceanC"> Interdire la pêche commerciale
+          mondiale pendant cinq ans pour permettre aux populations de poissons de se reconstituer. (Effort 10 points)
+        </label>
+      </div>
+      <button class="button submit-button" onclick="checkOceanAnswer()">Soumettre</button>
+    </div>
+
+    <!-- Quiz People -->
+    <div class="quiz-popup" id="pplQuiz">
+      <p> Comment comptez-vous encourager les gens à réduire leur consommation d’énergie dans leur vie quotidienne? </p>
+      <div class="options">
+        <label class="option"><input type="radio" name="pplAnswer" value="pplA"> Éduquer massivement sur les avantages
+          de la conservation de l’énergie. (Effort 2 points)</label>
+        <label class="option"><input type="radio" name="pplAnswer" value="pplB"> Mettre en œuvre des incitations
+          financières pour les foyers adoptant des pratiques écoénergétiques. (Effort 3 points) </label>
+        <label class="option"><input type="radio" name="pplAnswer" value="pplC"> Instaurer des normes strictes pour
+          l’efficacité énergétique des appareils électroménagers et des véhicules. (Effort 4 points) </label>
+      </div>
+      <button class="button submit-button" onclick="checkPplAnswer()">Soumettre</button>
+    </div>
+
+    <!-- Quiz Urban -->
+    <div class="quiz-popup" id="urbanQuiz">
+      <p> La croissance urbaine peut entraîner une perte de biodiversité. Comment comptez-vous concilier le
+        développement urbain avec la préservation de la biodiversité tout en réduisant les émissions de CO2? </p>
+      <div class="options">
+        <label class="option"><input type="radio" name="urbanAnswer" value="urbanA"> Promouvoir la création de parcs
+          urbains et de couloirs écologiques pour favoriser la biodiversité tout en réduisant les espaces urbains
+          asphaltés. (Effort 5 points)</label>
+        <label class="option"><input type="radio" name="urbanAnswer" value="urbanB"> Mettre en place des politiques
+          strictes de protection des espaces naturels urbains et de limitation de l’expansion urbaine pour préserver la
+          biodiversité. (Effort 8 points) </label>
+        <label class="option"><input type="radio" name="urbanAnswer" value="urbanC"> Intégrer des toits verts et des
+          jardins verticaux dans les plans d’urbanisme pour renforcer la biodiversité en milieu urbain. (Effort 8
+          points) </label>
+      </div>
+      <button class="button submit-button" onclick="checkUrbanAnswer()">Soumettre</button>
+    </div>
+
+    <!-- Quiz Industry -->
+    <div class="quiz-popup" id="induQuiz">
+      <p>Les émissions industrielles sont les plus difficiles à réduire à zéro. Que ferez-vous pour les diminuer?</p>
+      <div class="options">
+        <label class="option"><input type="radio" name="induAnswer" value="induA"> Fixer des objectifs nationaux pour
+          augmenter progressivement l’utilisation de l’hydrogène et le recours au captage et stockage du carbone.
+          (Effort 5 points)</label>
+        <label class="option"><input type="radio" name="induAnswer" value="induB"> Construire des aciéries de pointe
+          pour rendre la production d’acier plus efficace. (Effort 10 points) </label>
+        <label class="option"><input type="radio" name="induAnswer" value="induC"> Étendre considérablement
+          l’utilisation de l’hydrogène vert pour la production industrielle et intensifier le captage et le stockage du
+          carbone dans les usines d’acier et de ciment. (Effort 10 points) </label>
+      </div>
+      <button class="button submit-button" onclick="checkInduAnswer()">Soumettre</button>
+    </div>
+
+    <!-- Quiz Deforestation -->
+    <div class="quiz-popup" id="defoQuiz">
+      <p> La déforestation contribue aux émissions de CO2. Comment comptez-vous aborder ce problème? </p>
+      <div class="options">
+        <label class="option"><input type="radio" name="defoAnswer" value="defoA"> Encourager la reforestation et mettre
+          en œuvre des politiques de conservation des forêts. (Effort 5 points)</label>
+        <label class="option"><input type="radio" name="defoAnswer" value="defoB"> Imposer des restrictions sévères à
+          l’abattage d’arbres et promouvoir l’utilisation de produits alternatifs durables. (Effort 8 points) </label>
+        <label class="option"><input type="radio" name="defoAnswer" value="defoC"> Élaborer des accords internationaux
+          contraignants pour stopper la déforestation et investir massivement dans des programmes de régénération des
+          forêts. (Effort 10 points) </label>
+      </div>
+      <button class="button submit-button" onclick="checkDefoAnswer()">Soumettre</button>
+    </div>
+
+    <!-- Quiz Agriculture -->
+    <div class="quiz-popup" id="agriQuiz">
+      <p> Les émissions liées à l’agriculture représentent une part importante du problème du CO2. Comment
+        envisagez-vous réduire ces émissions? </p>
+      <div class="options">
+        <label class="option"><input type="radio" name="agriAnswer" value="agriA"> Encourager les pratiques agricoles
+          durables et l’adoption de techniques de culture à faible émission de carbone. (Effort 5 points)</label>
+        <label class="option"><input type="radio" name="agriAnswer" value="agriB"> Mettre en œuvre des réglementations
+          strictes pour réduire l’utilisation d’engrais et de pesticides. (Effort 8 points) </label>
+        <label class="option"><input type="radio" name="agriAnswer" value="agriC"> Investir massivement dans la
+          recherche sur des alternatives alimentaires à faible émission de carbone et promouvoir une transition vers des
+          régimes alimentaires plus durables. (Effort 10 points) </label>
+      </div>
+      <button class="button submit-button" onclick="checkAgriAnswer()">Soumettre</button>
+    </div>
+
+
+    <!-- End window -->
+    <div class="quiz-popup" id="lose" style="text-align: center;">
+      <h2>Oh non!</h2>
+      <p> Vous n’avez plus de points d’effort et vous ne pourrez pas atteindre le zéro net. Merci de sauvegarder votre résultat.</p>
+      <button class="button submit-button" onclick="saveInteraction()">Sauvegarder</button>
+    </div>
+
+    <div class="quiz-popup" id="win" style="text-align: center;">
+      <h2>Félicitations! </h2>
+      <p>Vous avez pris de sages décisions et réduit les émissions à zéro! Merci de sauvegarder votre résultat.</p>
+      <button class="button submit-button" onclick="saveInteraction()">Sauvegarder</button>
+    </div>
+
+    <div class="quiz-popup" id="end" style="text-align: center;">
+      <h2>Oh non!</h2>
+      <p>Vous avez pris toutes les décisions mais vous n’avez pas réduit les émissions à zéro! Merci de sauvegarder votre résultat.</p>
+      <button class="button submit-button" onclick="saveInteraction()">Sauvegarder</button>
+    </div>
+
+
+  </div>
+
+
+
+
+  <script src="scripts.js"></script>
+</body>
+
+</html>
